@@ -1,4 +1,5 @@
 package crs;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,69 +14,85 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
+/*
+ * The Admin class represents an administrator in the Course Registration System.
+ * It extends the User class and implements the AdminInterface and java.io.Serializable interfaces.
+ * The Admin class provides various methods for managing courses and students in the system.
+ */
 public class Admin extends User implements AdminInterface, java.io.Serializable {
 
-	
+	// Constructor for creating an Admin object
 	public Admin(String fn, String ln, String usn, String psw) {
 		String firstName = fn;
 		String lastName = ln;
 		String username = usn;
 		String password = psw;
 	}
-	
-	//Instantiate course object from default constructor
-	
-	//WORKS
+
+	// Instantiate course object from default constructor
+
+	/*
+	 * createCourses method allows the admin to create a new course in the system.
+	 * It prompts the admin to enter the course details and adds the course to the courseArrayList.
+	 * This method throws an IOException.
+	 */
 	public static String createCourses() throws IOException {
-		
+
 		Scanner input = new Scanner(System.in);
 		Scanner input2 = new Scanner(System.in);
 		System.out.print("Course Name: ");
 		String courseName = input.nextLine();
-		
+
 		System.out.print("Course ID: ");
 		String courseID = input.nextLine();
-		
+
 		System.out.print("Max # of Students: ");
 		int maxStudents = input2.nextInt();
-		
+
 		int currentStudents = 0;
-				
+
 		System.out.println("Course Instructor: ");
 		String courseInstructor = input.nextLine();
-		
+
 		System.out.print("Section Number: ");
 		int sectionNumber = input2.nextInt();
-		
+
 		System.out.print("Course Location: ");
 		String courseLocation = input.nextLine();
-		
-		
-		//Then add to .csv file
-		Course newCourse = new Course (courseName,courseID,maxStudents,currentStudents,null,courseInstructor,sectionNumber,courseLocation);
+
+		// Then add to .csv file
+		Course newCourse = new Course(courseName, courseID, maxStudents, currentStudents, null, courseInstructor,
+				sectionNumber, courseLocation);
 		crsMain.courseArrayList.add(newCourse);
 		return "Course added.";
 	}
-	
-	//WORKS
+
+	/*
+	 * deleteCourse method allows the admin to delete a course from the system.
+	 * It prompts the admin to enter the course ID and removes the course from the courseArrayList.
+	 */
 	public static void deleteCourse() {
 		Course course = new Course();
-		//Ask user for courseID
+		// Ask user for courseID
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter course ID: ");
 		String courseID = input.nextLine();
-		//Remove index from ArrayList of courses
-		
-		for (int i = 0; i<crsMain.courseArrayList.size(); i++) {
+		// Remove index from ArrayList of courses
+
+		for (int i = 0; i < crsMain.courseArrayList.size(); i++) {
 			course = crsMain.courseArrayList.get(i);
 			if (course.getCourseID().equals(courseID)) {
 				crsMain.courseArrayList.remove(i);
 			}
 		}
 	}
-	
-	//WORKS
+
+	/*
+	 * editCourse method allows the admin to edit the details of a course.
+	 * It prompts the admin to enter the course ID and the field they want to edit.
+	 * Based on the user's choice, it updates the corresponding field of the course.
+	 * This method throws an IOException.
+	 */
 	public static void editCourse() throws IOException {
 		Course course = new Course();
 		Scanner input = new Scanner(System.in);
@@ -83,94 +100,95 @@ public class Admin extends User implements AdminInterface, java.io.Serializable 
 		System.out.print("Course ID: ");
 		String courseID = input.nextLine();
 		int courseIndex = 0;
-		
-		//Ask user what they want to edit
+
+		// Ask user what they want to edit
 		System.out.print("What would you like to edit?\n");
 		System.out.print("1. Max amount of students\n");
 		System.out.print("2. Course Instructor\n");
 		System.out.print("3. Section Number\n");
 		System.out.print("4. Class location\n");
 		int choice = input.nextInt();
-		
-		for (int i = 0; i<crsMain.courseArrayList.size(); i++) {
+
+		for (int i = 0; i < crsMain.courseArrayList.size(); i++) {
 			course = crsMain.courseArrayList.get(i);
 			courseIndex = crsMain.courseArrayList.indexOf(crsMain.courseArrayList.get(i));
-			
-			
-				if (choice == 1 && courseID.equals(course.getCourseID())) {
-					System.out.print("New max amount of students: ");
-					int newMax = input2.nextInt();
-					crsMain.courseArrayList.get(courseIndex);
-					course.setMaxStudents(newMax);
-					break;
-				}
-				if (choice == 2 && courseID.equals(course.getCourseID())) {
-					System.out.println("New course instructor: ");
-					String newInstructor = input2.nextLine();
-					course.setCourseInstructor(newInstructor);
-					break;
-				}
-				if (choice == 3 && courseID.equals(course.getCourseID())) {
-					System.out.println("New section number: ");
-					int newSection = input2.nextInt();
-					course.setCourseSection(newSection);
-					break;
-				}
-				if (choice == 4 && courseID.equals(course.getCourseID())) {
-					System.out.println("New course location: ");
-					String newLocation = input2.nextLine();
-					course.setCourseLocation(newLocation);
-					break;
-				}
-			
+
+			if (choice == 1 && courseID.equals(course.getCourseID())) {
+				System.out.print("New max amount of students: ");
+				int newMax = input2.nextInt();
+				crsMain.courseArrayList.get(courseIndex);
+				course.setMaxStudents(newMax);
+				break;
+			}
+			if (choice == 2 && courseID.equals(course.getCourseID())) {
+				System.out.println("New course instructor: ");
+				String newInstructor = input2.nextLine();
+				course.setCourseInstructor(newInstructor);
+				break;
+			}
+			if (choice == 3 && courseID.equals(course.getCourseID())) {
+				System.out.println("New section number: ");
+				int newSection = input2.nextInt();
+				course.setCourseSection(newSection);
+				break;
+			}
+			if (choice == 4 && courseID.equals(course.getCourseID())) {
+				System.out.println("New course location: ");
+				String newLocation = input2.nextLine();
+				course.setCourseLocation(newLocation);
+				break;
+			}
+
 		}
-		
-		
-		System.out.println(crsMain.courseArrayList.toString());		
+
+		System.out.println(crsMain.courseArrayList.toString());
 	}
 
-	//WORKS
+	/*
+	 * displayInfo method displays the information of a course based on the course ID entered by the admin.
+	 * It searches for the course with the given ID and prints its details.
+	 * This method throws an IOException.
+	 */
 	public static void displayInfo() throws IOException {
-		Course course = new Course(); 
+		Course course = new Course();
 		Scanner input = new Scanner(System.in);
-		//Ask user for Course ID
+		// Ask user for Course ID
 		System.out.print("Enter course ID: ");
 		String courseID = input.nextLine();
-		
-		for (int i = 0; i<crsMain.courseArrayList.size(); i++) {
+
+		for (int i = 0; i < crsMain.courseArrayList.size(); i++) {
 			course = crsMain.courseArrayList.get(i);
 			if (course.getCourseID().equals(courseID)) {
 				System.out.println(crsMain.courseArrayList.get(i));
 			}
 		}
 	}
-	
-	//WORKS
+
+	/*
+	 * registerStudent method allows the admin to register a new student in the system.
+	 * It prompts the admin to enter the student's details and adds the student to the students ArrayList.
+	 */
 	public static void registerStudent() {
 		Scanner input = new Scanner(System.in);
-		
+
 		System.out.println("Student First Name: ");
 		String firstName = input.nextLine();
 		System.out.println("Student Last Name: ");
-		String lastName = input.nextLine(); 
+		String lastName = input.nextLine();
 		String username = null;
-		String password = null; 
-		
-		Student newStudent = new Student(firstName,lastName,username,password,crsData.courses);
+		String password = null;
+
+		Student newStudent = new Student(firstName, lastName, username, password, crsData.courses);
 		crsData.students.add(newStudent);
-		//students.add(newStudent);
 		System.out.println(crsData.students.toString());
 	}
-	
-	//ArrayList of students
-	//public static ArrayList<Student> students = new ArrayList<>();
-	
-	
-	//WORKS
-	public static void viewCourses() {
 
-			System.out.println(crsMain.courseArrayList.toString());
-		
+	/*
+	 * viewCourses method displays the list of all courses available in the system.
+	 * It prints the courseArrayList, which contains all the courses.
+	 */
+	public static void viewCourses() {
+		System.out.println(crsMain.courseArrayList.toString());
 	}
 
 	public static String fullCourseID = null;

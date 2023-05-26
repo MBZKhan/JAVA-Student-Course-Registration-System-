@@ -1,4 +1,5 @@
 package crs;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -17,6 +18,11 @@ import java.io.Serializable;
 
 public class crsMain implements Serializable {
 	
+	/*
+	 * Main function for the Course Registration System.
+	 * It initializes an admin object, deserializes student and course data,
+	 * displays the course list, and prompts for login.
+	 */
 	public static void main (String [] args) throws IOException {
 		User admin = new Admin("Carter", "Fodge", "Admin", "Admin001");
 		Serialization.studentDeserialization();
@@ -28,6 +34,10 @@ public class crsMain implements Serializable {
 	
 	public static ArrayList<Course> courseArrayList = new ArrayList<Course>();
 	
+	/*
+	 * courseList function reads course data from a CSV file and creates Course objects.
+	 * It populates the courseArrayList with the created objects and returns the list.
+	 */
 	public static ArrayList<Course> courseList() throws IOException{
 		
 		ArrayList<Course> courses = new ArrayList<Course>();
@@ -35,7 +45,7 @@ public class crsMain implements Serializable {
 		try (BufferedReader br = new BufferedReader(new FileReader(new File("MyUniversityCourses.csv")))){
 			String line;
 			while ((line = br.readLine()) != null) {
-					//Create array for each course, with course array item split by a comma
+				// Create array for each course, with course array item split by a comma
 				String[] entries = line.split(",");
 				
 				Course courseEntries = new Course(entries[0],entries[1],Integer.parseInt(entries[2]),Integer.parseInt(entries[3]),
@@ -47,18 +57,19 @@ public class crsMain implements Serializable {
 		catch(FileNotFoundException ex){
 			ex.printStackTrace();
 		}
-
 		catch (IOException ex) {
 			ex.printStackTrace();
 		}
 		
-		
 		courseArrayList = courses;
-		
 		return courseArrayList;
 	}
 	
 	
+	/*
+	 * LoginMain function presents the login menu to the user and handles user authentication and selection.
+	 * It allows the user to login as an admin or a student, or exit the program.
+	 */
 	public static void LoginMain() throws IOException{
 		System.out.print("1. Admin\n" + "2. Student\n" + "3. Exit\n");
 		
@@ -68,7 +79,7 @@ public class crsMain implements Serializable {
 		
 		Scanner input2 = new Scanner(System.in);
 		
-		//Check if username/password are correct
+		// Check if username/password are correct
 		if (choice == 1) {  
 			System.out.println("Username: ");
 			String username = input2.nextLine();
@@ -76,8 +87,9 @@ public class crsMain implements Serializable {
 			System.out.println("Password: ");
 			String password = input2.nextLine();
 			
-			if (username.equals("Admin") && password.equals("Admin001")) {adminSelection();}
-			
+			if (username.equals("Admin") && password.equals("Admin001")) {
+				adminSelection();
+			}
 		}
 		
 		if (choice == 2) {
@@ -89,29 +101,25 @@ public class crsMain implements Serializable {
 			System.out.print("Enter your Last Name: ");
 			String lastName = firstTimeLog.nextLine();
 			
-			//Let the user create a new username and password themselves
-			//if (firstLog.equals("yes") || firstLog.equals("Yes")) {
-				System.out.print("Username: ");
-				String newUsername = firstTimeLog.nextLine();
+			// Let the user create a new username and password themselves
+			System.out.print("Username: ");
+			String newUsername = firstTimeLog.nextLine();
 
-				System.out.print("Password: ");
-				String newPassword = firstTimeLog.nextLine();
+			System.out.print("Password: ");
+			String newPassword = firstTimeLog.nextLine();
 
-				for (int i = 0; i<crsData.students.size(); i++) {
-					Student studentIndex = crsData.students.get(i);
-					//Find student object in ArrayList to add username/password to correct profile
-					if (studentIndex.getFirstName().equals(firstName) && studentIndex.getLastName().equals(lastName)) {
-						studentIndex.setUsername(newUsername);
-						studentIndex.setPassword(newPassword);
-						studentIndex.setFirstName(firstName);
-						studentIndex.setLastName(lastName);
-					}
+			for (int i = 0; i<crsData.students.size(); i++) {
+				Student studentIndex = crsData.students.get(i);
+				// Find student object in ArrayList to add username/password to correct profile
+				if (studentIndex.getFirstName().equals(firstName) && studentIndex.getLastName().equals(lastName)) {
+					studentIndex.setUsername(newUsername);
+					studentIndex.setPassword(newPassword);
+					studentIndex.setFirstName(firstName);
+					studentIndex.setLastName(lastName);
 				}
-				
-//				System.out.println("New username and password set.");
-				studentSelection();
-//			}
-					
+			}
+			
+			studentSelection();			
 		}
 		if (choice == 3) {
 			Serialization.studentSerialization();
@@ -121,6 +129,10 @@ public class crsMain implements Serializable {
 	}
 	
 	
+	/*
+	 * adminSelection function presents the admin menu to the user and handles admin's menu selection.
+	 * It calls the appropriate method from the Admin class based on the selected option.
+	 */
 	public static void adminSelection() throws IOException {
 		System.out.print("\nCourse Management:\n"
 				+ "1. Create a new course\n"
@@ -138,31 +150,36 @@ public class crsMain implements Serializable {
 				+ "11. View courses for a student\n"
 				+ "12. Sort courses\n"
 				+ "13. Exit\n");
-		//Ask user to make selection
+		
+		// Ask user to make selection
 		Scanner input = new Scanner(System.in);
 		System.out.println("Enter selection: ");
 		int systemEntry = input.nextInt();
 		
-		//Call specified method from Admin class based on selection
+		// Call specified method from Admin class based on selection
+		Scanner input2 = new Scanner(System.in);
+		if (systemEntry == 1) Admin.createCourses();
+		if (systemEntry == 2) Admin.deleteCourse();
+		if (systemEntry == 3) Admin.editCourse();
+		if (systemEntry == 4) Admin.displayInfo();
+		if (systemEntry == 5) Admin.registerStudent();	
+		if (systemEntry == 7) Admin.viewCourses();
+		if (systemEntry == 8) Admin.viewFullCourses();
+		if (systemEntry == 9) Admin.addCourseToFile();
+		if (systemEntry == 10) Admin.studentNamesInCourse();
+		if (systemEntry == 11) Admin.coursesPerStudent();
+		if (systemEntry == 12) Admin.sortMostStudentsPerClass();
+		if (systemEntry == 13 || systemEntry == 6) {
+			LoginMain(); 
+		}
 		
-			Scanner input2 = new Scanner(System.in);
-			if (systemEntry == 1) Admin.createCourses();
-			if (systemEntry == 2) Admin.deleteCourse();
-			if (systemEntry == 3) Admin.editCourse();
-			if (systemEntry == 4) Admin.displayInfo();
-			if (systemEntry == 5) Admin.registerStudent();	
-			if (systemEntry == 7) Admin.viewCourses();
-			if (systemEntry == 8) Admin.viewFullCourses();
-			if (systemEntry == 9) Admin.addCourseToFile();
-			if (systemEntry == 10) Admin.studentNamesInCourse();
-			if (systemEntry == 11) Admin.coursesPerStudent();
-			if (systemEntry == 12) Admin.sortMostStudentsPerClass();
-			if (systemEntry == 13 || systemEntry == 6) {
-				LoginMain(); 
-			}
 		adminSelection();
 	}
 	
+	/*
+	 * studentSelection function presents the student menu to the user and handles student's menu selection.
+	 * It calls the appropriate method from the Student class based on the selected option.
+	 */
 	public static void studentSelection() throws IOException {
 		System.out.print("Course Management:\n"
 				+ "1. View all courses\n"
@@ -171,12 +188,13 @@ public class crsMain implements Serializable {
 				+ "4. Withdraw from a course\n"
 				+ "5. Your courses\n"
 				+ "6. Exit\n");
-		//Ask user to make selection
+		
+		// Ask user to make selection
 		Scanner input = new Scanner(System.in);
 		System.out.println("Enter selection: ");
 		int systemEntry = input.nextInt();
 		
-		//Call specified method from Student class based on selection
+		// Call specified method from Student class based on selection
 		Scanner input2 = new Scanner(System.in);
 		if (systemEntry == 1) Student.viewAllCourses();
 		if (systemEntry == 2) Student.viewNotFullCourses();
@@ -186,6 +204,7 @@ public class crsMain implements Serializable {
 		if (systemEntry == 6) {
 			LoginMain();
 		}
+		
 		studentSelection();
 	}
 }
